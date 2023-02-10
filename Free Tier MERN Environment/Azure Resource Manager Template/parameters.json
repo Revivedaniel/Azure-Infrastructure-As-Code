@@ -3,16 +3,49 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "DatabaseName": {
-            "value": "<enter a unique lowercase database name here. Ex: revivedanieldb>" 
+            "value": "<enter a unique lowercase database name here. Ex: revivedanieldb>"
         },
         "StaticWebAppName": {
-            "value": "<enter a name for your static webapp max length 40>" 
+            "value": "<enter a name for your static webapp max length 40>"
         },
         "location": {
-            "value": "<Enter Location to Deploy Resources>"
+            "value": "<select Location to Deploy Resources>"
         },
         "AzureFunctionAPILocation": {
-            "value": "<Enter Location to Deploy Azure Function API for Static Web App>"
+            "value": "<select Location to Deploy Azure Function API for Static Web App>"
+        },
+        "repositoryUrl": {
+            "value": "<Enter the URL of your GitHub repository>"
+        },
+        "branch": {
+            "value": "<Enter the branch name of your GitHub repository>"
+        },
+        "repositoryToken": {
+            "value": "<Enter the GitHub Personal Access Token>"
+        },
+        "appRoot": {
+            "value": "<Enter the path to your static web app root, default is './'>"
+        },
+        "appBuildDirectory": {
+            "value": "<Enter the path to your static web app build directory, default is 'build'>"
+        },
+        "backendServerName": {
+            "value": "<Enter the name of your backend app>"
+        },
+        "hostingPlanName": {
+            "value": "<Enter the name of your hosting plan>"
+        },
+        "linuxNodeEnvironment": {
+            "value": "<select the name of your Linux Node Environment>"
+        },
+        "enableFreeTier": {
+            "value": "<true | false>"
+        },
+        "applicationInsightsName": {
+            "value": "<Enter the name of your Application Insights>"
+        },
+        "workspaceResourceId": {
+            "value": "<Enter the Resource ID of your Log Analytics Workspace>"
         }
     }
 }

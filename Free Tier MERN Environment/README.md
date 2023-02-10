@@ -6,6 +6,9 @@ This type of environment is good for Dev/Hobby projects
 There are 3 ways to deploy this IAC. Azure Bicep, Azure Resource Manager(ARM) Template, and Terraform. 
 Each folder contains all the files you need to deploy the environment.
 
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fgithub.com%2FRevivedaniel%2FAzure-Infrastructure-As-Code%2Fblob%2Fmain%2FFree%2520Tier%2520MERN%2520Environment%2FAzure%2520Resource%2520Manager%2520Template%2Ftemplate.json)
+[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true)](http://armviz.io/#/?load=https%3A%2F%2Fgithub.com%2FRevivedaniel%2FAzure-Infrastructure-As-Code%2Fblob%2Fmain%2FFree%2520Tier%2520MERN%2520Environment%2FAzure%2520Resource%2520Manager%2520Template%2Ftemplate.json)
+
 ## Resources in this Environment
 * Static Web App (For a React frontend)
 * App Service (For the Express Backend)
@@ -34,9 +37,65 @@ This is the name given to the Static Web App (you frontend React App)<br/>
 This parameter is pretty open and just has a max character limit of 40
 
 ### location
-This is the location where all the resources will be created.<br/>
+This is the location where most of the resources will be created.<br/>
 It is best practive to choose the location nearest your end users.<br/>
 In this case, I would use the location nearest to you: [Azure Geographies](https://azure.microsoft.com/en-us/explore/global-infrastructure/geographies/#geographies)
+
+### AzureFunctionAPILocation
+This parameter is for the API of the Static Web App. <br>
+This environment does not support frontend APIs since we are using an express backend in an app service.<br>
+Simply select a location closest to the location parameter before this one.
+
+### repositoryUrl
+This parameter sets the repository url for the static web app.
+The way this Static Web App is set up requires the repository of the code to be linked upon creation.
+The URl should be structured like this: <br>
+```https://github.com/{Github Username}/{Repository Name}```
+
+### branch
+This is the branch that should be deployed to the static web app<br>
+This parameter is defaulted to ```main```
+
+### repositoryToken
+This parameter is a Personal Access Token that Azure requires to be able to create a github workflow and access your private repositories.
+This setup is a little intense for this README but here are the GitHub docs: [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
+### appRoot
+This is the rool directory of your app. (Where the package.json is stored)<br>
+This defaults to ```./```<br>
+
+### appBuildDirectory
+This is the path to where the build output folder is located after you npm run build.<br>
+This defaults to ```build``` or ```/build/```
+
+### backendServerName
+This is the name of your backend server.<br>
+This parameter has similar contraints as the static web app name parameter
+
+### hostingPlanName
+This is the name of the App Service Plan
+This parameter has similar contraints as the static web app name parameter
+
+### linuxNodeEnvironment
+This is the node runtime environment that linux should run your code on.<br>
+This defaults to ```NODE|16-lts```
+
+### enableFreeTier
+This parameter allows you to flag the CosmosDB(MongoDB) database as free tier.<br>
+Only one free tier CosmosDB per subscription.<br>
+This defaults to ```true```
+
+### applicationInsightsName
+This is the name of the Application Insights(Analytics).
+This parameter has similar contraints as the static web app name parameter
+
+### workspaceResourceId
+This is the resource ID for the Log Analytics Workspace where the Application Insights will send and store data.<br>
+The resource ID can be found by [clicking here](https://portal.azure.com/#view/HubsExtension/BrowseResource/resourceType/Microsoft.OperationalInsights%2Fworkspaces) and selecting the workspace you would like to use.<br>
+Then, select "JSON View" to the far right of the resource blade.<br>
+At the top of that view you will see the resource id
+
+# Addition Information
 
 ## Tags
 Tags are a great tool to keep track of cost across multiple resources, projects, and cost centers.<br/>

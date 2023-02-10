@@ -1,5 +1,5 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "DatabaseName": {
@@ -9,9 +9,92 @@
             "type": "String"
         },
         "location": {
-            "type": "String"
-        }
+            "type": "String",
+            "allowedValues": [
+                "eastus",
+                "eastus2",
+                "southcentralus",
+                "westus3",
+                "southeastasia",
+                "northeurope",
+                "swedencentral",
+                "uksouth",
+                "westeurope",
+                "centralus",
+                "southafricanorth",
+                "centralindia",
+                "eastasia",
+                "japaneast",
+                "koreacentral",
+                "canadacentral",
+                "francecentral",
+                "norwayeast",
+                "switzerlandnorth",
+                "uaenorth",
+                "brazilsouth",
+                "qatarcentral",
+                "northcentralus",
+                "westus",
+                "westcentralus",
+                "australiacentral",
+                "australiasoutheast",
+                "koreasouth",
+                "southindia",
+                "canadaeast",
+                "ukwest"
+            ]
+        },
         "AzureFunctionAPILocation": {
+            "type": "String",
+            "allowedValues": [
+                "Central US",
+                "East US 2",
+                "East Asia",
+                "West Europe",
+                "West US 2"
+            ]
+        },
+        "repositoryUrl": {
+            "type": "String"
+        },
+        "branch": {
+            "type": "String",
+            "defaultValue": "main"
+        },
+        "repositoryToken": {
+            "type": "String"
+        },
+        "appRoot": {
+            "type": "String",
+            "defaultValue": "./"
+        },
+        "appBuildDirectory": {
+            "type": "String",
+            "defaultValue": "build"
+        },
+        "backendServerName": {
+            "type": "String"
+        },
+        "hostingPlanName": {
+            "type": "String"
+        },
+        "NodeRuntime": {
+            "type": "String",
+            "defaultValue": "NODE|16-lts",
+            "allowedValues": [
+                "NODE|16-lts",
+                "NODE|14-lts",
+                "NODE|18-lts"
+            ]
+        },
+        "enableFreeTier": {
+            "type": "Bool",
+            "defaultValue": true
+        },
+        "applicationInsightsName": {
+            "type": "String"
+        },
+        "workspaceResourceId": {
             "type": "String"
         }
     },
@@ -58,7 +141,7 @@
                 "apiProperties": {
                     "serverVersion": "4.2"
                 },
-                "enableFreeTier": true,
+                "enableFreeTier": "[parameters('enableFreeTier')]",
                 "capacity": {
                     "totalThroughputLimit": 4000
                 }
@@ -79,10 +162,68 @@
                 "branch": "[parameters('branch')]",
                 "repositoryToken": "[parameters('repositoryToken')]",
                 "buildProperties": {
-                    "appLocation": "[parameters('appLocation')]",
-                    "apiLocation": "[parameters('apiLocation')]",
-                    "appArtifactLocation": "[parameters('appArtifactLocation')]"
+                    "appLocation": "[parameters('appRoot')]",
+                    "apiLocation": "",
+                    "appArtifactLocation": "[parameters('appBuildDirectory')]"
                 }
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('hostingPlanName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [],
+            "sku": {
+                "Tier": "Free",
+                "Name": "F1"
+            },
+            "kind": "linux",
+            "properties": {
+                "name": "[parameters('hostingPlanName')]",
+                "workerSize": "0",
+                "workerSizeId": "0",
+                "numberOfWorkers": "1",
+                "reserved": true,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('backendServerName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+            ],
+            "properties": {
+                "name": "[parameters('backendServerName')]",
+                "siteConfig": {
+                    "appSettings": [],
+                    "linuxFxVersion": "[parameters('NodeRuntime')]",
+                    "alwaysOn": false,
+                    "ftpsState": "FtpsOnly"
+                },
+                "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "clientAffinityEnabled": false,
+                "virtualNetworkSubnetId": null,
+                "httpsOnly": true,
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[parameters('applicationInsightsName')]",
+            "location": "[parameters('location')]",
+            "kind": "web",
+            "dependsOn": [],
+            "properties": {
+                "ApplicationId": "[parameters('applicationInsightsName')]",
+                "Application_Type": "web",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaAIExtensionEnablementBlade",
+                "WorkspaceResourceId": "[parameters('workspaceResourceId')]"
             }
         }
     ],
