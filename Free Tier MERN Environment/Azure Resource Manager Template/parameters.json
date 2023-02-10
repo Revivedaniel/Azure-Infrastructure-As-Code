@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DatabaseName": {
+            "value": "<enter a unique lowercase database name here. Ex: revivedanieldb>" 
+        },
+        "StaticWebAppName": {
+            "value": "<enter a name for your static webapp max length 40>" 
+        },
+        "location": {
+            "value": "<Enter Location to Deploy Resources>"
+        },
+        "AzureFunctionAPILocation": {
+            "value": "<Enter Location to Deploy Azure Function API for Static Web App>"
+        }
+    }
+}
